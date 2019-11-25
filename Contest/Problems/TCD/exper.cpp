@@ -12,19 +12,6 @@ bool ss(pair<ll,ll> a, pair<ll,ll> b) {
     return a.se < b.se;
 }
 
-bool check(ll xa, ll ya, ll xb, ll yb, ll xc, ll yc) {
-    ll x = xc - xa;
-    ll y = xb - xc;
-    if(ya * y + yb * x > (xb - xa) * yc)
-        return true;
-    else return false;
-}
-
-bool check2(ll xa, ll ya, ll xb, ll yb, ll xc, ll yc) {
-    if(yc <= ya || yc <= yb) return true;
-    else return false;
-}
-
 ll n, here[MAXN];
 pair<ll,ll> a[MAXN], b[MAXN];
 int main() {
@@ -47,24 +34,28 @@ int main() {
         b[i].fi = 0;
     }
 
-    for(int i = 1; i <= n - 1; i++) {
+    float res;
+    for(int i = 1; i <= n; i++) {
+        res = -INF;
         for(int j = i + 1; j <= n; j++) {
-            ll flag = 0;
-            for(int k = i + 1; k <= j - 1; k++) {
-                if(check2(a[i].fi, a[i].se, a[j].fi, a[j].se, a[k].fi, a[k].se) == false) {
-                    flag = 1;
-                    break;
-                }
-            }
-            if(flag == 0) {
+            float x = (a[j].se - a[i].se) / (float)(a[j].fi - a[i].fi);
+            if(x >= res) {
                 b[i].fi++;
-                b[j].fi++;
+                res = x;
+            }
+        }
+        res = INF;
+        for(int k = i - 1; k >= 1; k--) {
+            float x = (a[k].se - a[i].se) / (float)(a[k].fi - a[i].fi);
+            if(x <= res) {
+                b[i].fi++;
+                res = x;
             }
         }
     }
 
     sort(b + 1, b + n + 1, ss);
-    for(int i = 1; i <= n; i++) cout << b[i].fi << " ";
+    for(int i = 1; i <= n; i++) cout << b[i].fi << endl;
     return 0;
 }
 
